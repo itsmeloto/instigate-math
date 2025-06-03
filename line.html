@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <canvas id="c" width="800" height="600"></canvas>
+    <script>
+      const C = document.getElementById("c").getContext("2d");
+      const W = C.canvas.width;
+      const H = C.canvas.height;
+      const epsilon = 0.75;
+      const epsilon2 = 0.05;
+      const scale = 25;
+      const scaleInv = 1 / scale; 
+      const W2 = W / 2; 
+      const H2 = H / 2; 
+      
+      const epsilonScale = epsilon * scaleInv;
+      const epsilon2Scale = epsilon2 * scaleInv;
+
+      const I = C.getImageData(0, 0, W, H);
+      const D = I.data;
+
+      const RED = { r: 1, g: 0, b: 0, a: 1 };
+      const BLUE = { r: 0, g: 0, b: 1, a: 1 };
+      const GRAY = { r: 0.5, g: 0.5, b: 0.5, a: 1 };
+      const GREEN = { r: 0, g: 1, b: 0, a: 1 };
+      const BLACK = { r: 0, g: 0, b: 0, a: 1 };
+      const WHITE = { r: 1, g: 1, b: 1, a: 1 };
+      const TRANSPARENT = { r: 0, g: 0, b: 0, a: 0 };
+
+      function drawFrame() {
+        for (let y = 0, i = 0; y < H; y++) {
+          const cy = H2 - y;
+          for (let x = 0; x < W; x++) {
+            const cx = x - W2;
+            const p = getPixel(cx, cy);
+            D[i++] = p.r * 255;
+            D[i++] = p.g * 255;
+            D[i++] = p.b * 255;
+            D[i++] = p.a * 255;
+          }
+        }
+        C.putImageData(I, 0, 0);
+      }
+
+      function getPixel(cx, cy) {
+        const mx = cx * scaleInv;
+        const my = cy * scaleInv;
+
+        if (Math.abs(5 * mx - my + 30) / Math.sqrt(26) < epsilonScale) {
+          return RED;
+        }
+
+        if (Math.abs(mx - 5 * my - 30) / Math.sqrt(26) < epsilonScale) {
+          return RED;
+        }
+
+        if (Math.abs(my) < epsilonScale || Math.abs(mx) < epsilonScale) {
+          return BLACK;
+        }
+
+        if (Math.abs(mx - my) / Math.sqrt(2) < epsilonScale) {
+          return GREEN;
+        }
+
+        return GRAY ;
+      }
+
+      drawFrame();
+    </script>
+  </body>
+</html>

@@ -29,21 +29,28 @@
       function getPixel(x, y) {
         let r = 0, g = 0, b = 1, a = 1;
 
-        if (isLine(cx, cy, x, y, 1, 0, 3)) {
-          r = 1; g = 0; b = 0; a = 1;
+        if (isLine(cx, cy, x, y, 1, 0, 3) || isLineY(cx, cy, x, y, 0, 1, 2)) {
+          r = 1; g = 1; b = 1; a = 1;
         }
-        else if (isLineReverse(cx, cy, x, y, 1, 0, 3)) {
-          r = 0; g = 1; b = 0; a = 1;
+        else if (isParabola(x, y, cx, cy, 0.01, 0, 0, 2) || isParabolaReverse(x, y, cx, cy, 0.01, 0, 0, 2)) {
+          r = 1; g = 0; b = 0; a = 1;
         }
         return { r, g, b, a };
       }
 
       function isLine(cx, cy, x, y, k, b, tolerance) {
-        return Math.abs(y - (k * (x - cx) + b + cy)) < tolerance;
+        return Math.abs(k * (x - cx) + b + (y - cy)) < tolerance;
       }
-      function isLineReverse(cx, cy, x, y, k, b, tolerance) {
-        return Math.abs(x - (k * (y - cy) + b + cx)) < tolerance;
+      function isLineY(cx, cy, x, y, k, b, tolerance) {
+        return Math.abs(k * (y - cy) + b + (x - cx)) < tolerance;
       }
+      function isParabola(x, y, cx, cy, a, b, c, tolerance) {
+        return Math.abs(a * (x - cx) ** 2 + b * x + c + (y - cy)) < tolerance;
+      }
+      function isParabolaReverse(x, y, cx, cy, a, b, c, tolerance) {
+        return Math.abs(a * (y - cy) ** 2 + b * x + c - (x - cx)) < tolerance;
+      }
+
 
       drawAxes();
       function drawAxes() {

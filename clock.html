@@ -1,0 +1,19 @@
+<canvas id="c" width="600" height="400"></canvas>
+<script>
+const c=document.getElementById("c"),x=c.getContext("2d"),W=c.width,H=c.height,C=W/2,D=H/2,R=150;
+function drawClock(){
+x.fillStyle="grey";x.fillRect(0,0,W,H);
+x.beginPath();x.arc(C,D,R,0,2*Math.PI);x.strokeStyle="black";x.lineWidth=3;x.stroke();
+for(let i=0;i<12;i++){
+let a=Math.PI/2-i*Math.PI/6;
+x.beginPath();x.moveTo(C+(R-10)*Math.cos(a),D-(R-10)*Math.sin(a));x.lineTo(C+R*Math.cos(a),D-R*Math.sin(a));x.lineWidth=4;x.stroke();
+}
+const n=new Date(),s=n.getSeconds()+n.getMilliseconds()/1000,m=n.getMinutes()+s/60,h=n.getHours()%12+m/60;
+const sa=Math.PI/2-s*Math.PI/30,ma=Math.PI/2-m*Math.PI/30,ha=Math.PI/2-h*Math.PI/6;
+x.beginPath();x.moveTo(C,D);x.lineTo(C+75*Math.cos(ha),D-75*Math.sin(ha));x.lineWidth=8;x.strokeStyle="#222";x.stroke();
+x.beginPath();x.moveTo(C,D);x.lineTo(C+112*Math.cos(ma),D-112*Math.sin(ma));x.lineWidth=5;x.strokeStyle="#444";x.stroke();
+x.beginPath();x.moveTo(C,D);x.lineTo(C+135*Math.cos(sa),D-135*Math.sin(sa));x.lineWidth=2;x.strokeStyle="red";x.stroke();
+x.beginPath();x.arc(C,D,7,0,2*Math.PI);x.fillStyle="#222";x.fill();
+}
+setInterval(drawClock,16);
+</script>
